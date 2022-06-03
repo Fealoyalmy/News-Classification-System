@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>新闻分类</title>
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+		<link href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&display=swap" rel="stylesheet">
+		<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.js"></script>
+		<script src="{{url_for('static',filename='jquery-3.6.0.js')}}"></script>
+
+		<style type="text/css">
+			body{
+				width: auto;
+				height: 100%;
+				margin: 0;
+				padding: 0;
+				background: #141E30;  /* fallback for old browsers */
+				background: -webkit-linear-gradient(to right, #243B55, #141E30);  /* Chrome 10-25, Safari 5.1-6 */
+				background: linear-gradient(to right, #243B55, #141E30); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+			}
+			.banner{
+				width: auto;
+				height: 20%;
+				text-align: center;
+				padding-top: 4em;
+				padding-bottom: 2em;
+			}
+			.banner span{
+				margin: auto;
+				margin-top: 2em;
+				padding: 0.3em;
+				font-size: 5em;
+				/* font-weight: bold; */
+				color: aliceblue;
+				text-shadow: 0.1em 0.1em 0.3em rgba(0,0,0,.6);
+				font-family: '方正硬笔行书_GBK', cursive;
+				width: auto;
+			}
+			.main{
+				width: auto;
+				height: 35em;
+				margin-top: 1px;
+				padding: 0;
+			}
+			.left-panel{
+				width: 13%;
+				height: 100%;
+				padding-top: 0.3em;
+				background-color: rgba(51,54,59,0.1);
+				/* opacity: 0.2; */
+				border-radius: 1em;
+			}
+			.select-btn{
+				width: 100%;
+				height: 4.5em;
+				margin: 1em auto;
+				padding-top: 1.5em;
+				text-align: center;
+				background-color: rgba(234,234,234,0.3);
+				border-radius: 1.5em;
+			}
+			.select-btn:hover{
+				cursor: pointer;
+				transform:translateX(4px);
+				transition: all .1s;
+			}
+			.select-btn-active{
+				background-color: rgba(54,140,191,0.7);
+			}
+			.left-panel span{
+				margin: auto;
+				/* padding-top: 1em; */
+				font-size: 2em;
+				font-weight: bold;
+				color: rgba(234,234,234,1);
+				text-shadow: 0.1em 0.1em 0.3em rgba(0,0,0,.6);
+				text-align: center;
+				/* font-family: '方正硬笔行书_GBK', cursive; */
+			}
+			.right-panel{
+				width: 60%;
+				height: 100%;
+				margin: -35em 0 0 20%;
+				/* padding: 5%; */
+				background-color: rgba(234,234,234,0.3);
+				border-radius: 1em;
+				box-shadow: 0.1em 0.1em 1em rgba(0,0,0,.2);
+			}
+			.title-textarea{
+				background-color: rgba(234,234,234,0.9);
+				padding: 0.3em;
+				margin-top: 1em;
+				margin-left: 16%;
+				border: 0;
+				border-radius: 1em;
+				width: 65.5%;
+				height: 1em;
+				color: #000000;
+				font-family: 'ZCOOL QingKe HuangYou', cursive;
+				font-size: 30px;
+				outline: 0px;
+				overflow: hidden;
+				resize: none;
+			}
+			.content-textarea{
+				background-color: rgba(234,234,234,0.9);
+				padding: 0.3em;
+				margin-top: 1em;
+				margin-left: 16%;
+				border: 0;
+				border-radius: 1em;
+				width: 65.5%;
+				height: 5em;
+				color: #000000;
+				font-family: 'ZCOOL QingKe HuangYou', cursive;
+				font-size: 30px;
+				outline: 0px;
+				resize: none;
+			}
+			.btn-classify{
+				/* margin-top: 2em;
+				margin-left: 15%; */
+				padding: 6px;
+				width: 26%;
+				height: auto;
+				font-size: 2em;
+				font-weight: bold;
+				color: rgba(255,255,255,1);
+				border-radius: 0.5em;
+				position: absolute;
+				left: 37%;
+				top: 21em;
+				/* font-family: 'ZCOOL QingKe HuangYou', cursive; */
+				border: 0;
+				outline: 0px;
+				background-color: rgba(126,188,89,0.5);
+				box-shadow: 0.1em 0.1em 1em rgba(0,0,0,.2);
+				/* text-shadow: 3px 3px 0.1em rgba(0,0,0,.6); */
+			}
+			.btn-classify:hover{
+				cursor: pointer;
+				transform: scale(1.02); 
+				transition: all .1s;
+			}
+			#panel{
+				width: 100%;
+				height: 90%;
+				margin: auto;
+			}
+			.result{
+				width: 37.2%;
+				height: 5em;
+				position: absolute;
+				left: 29.5%;
+				top: 13em;
+				/* margin-top: 1em;
+				margin-left: 16%; */
+				background-color: rgba(234,234,234,0.9);
+				padding: 1em;
+				border: 0;
+				border-radius: 1em;
+				font-size: 30px;
+				color: #000000;
+				font-family: 'ZCOOL QingKe HuangYou', cursive;
+			}
+			.res-class{
+				width: 40%;
+				height: 100%;
+				margin: 0;
+				padding-top: 1em;
+				text-align: center;
+			}
+			.res-class span{
+				width: 100%;
+				height: 40%;
+				margin: auto;
+				font-size: 2em;
+				/* font-weight: bold; */
+				color: black;
+				text-align: center;
+			}
+			.res-list{
+				width: 40%;
+				height: 100%;
+				margin: -6em 0 0 45%;
+				/* margin: 0; */
+				padding-left: 1em;
+				border: 1px solid;
+				border-width: 0 0 0 1px;
+			}
+			.res-list p{
+				margin: 3px;
+				font-size: 26px;
+			}
+			.inp-lab{
+				/* background-color: rgba(234,234,234,0.9); */
+				padding: 0.3em;
+				position: fixed;
+				/* top: 2em;
+				left: 30%; */
+				margin-top: 1em;
+				margin-left: 9%;
+				border: 0;
+				border-radius: 1em;
+				width: 26%;
+				height: 1em;
+				font-size: 3em;
+				color: rgba(255,255,255,1);
+				font-family: 'ZCOOL QingKe HuangYou', cursive;
+				outline: 0px;
+				/* box-shadow: 0.1em 0.1em 1em rgba(0,0,0,.2); */
+				/* text-shadow: 3px 3px 0.1em rgba(0,0,0,.6); */
+			}
+			a:link{
+				font-size: 44px;
+				color: rgb(90, 169, 215);
+				text-decoration: none;
+			}
+			a:hover{
+				font-size: 44px;
+				color: rgba(126,188,89,0.8);
+				text-decoration: underline;
+			}
+			a:visited{
+				font-size: 44px;
+				color: rgba(255,255,255,1);
+				text-decoration: none;
+			}
+			a:active{
+				font-size: 44px;
+				color: rgba(126,188,89,0.3);
+				text-decoration: none;
+			}
+			.inp-file{
+				margin-top: 4em;
+				margin-left: 14%;
+				padding: 0.6em;
+				width: 70.5%;
+				height: 1.6em;
+				font-size: 2.2em;
+				color: rgba(255,255,255,1);
+				border-radius: 0.5em;
+				font-family: 'ZCOOL QingKe HuangYou', cursive;
+				border: 0;
+				outline: 0px;
+				background-color: rgba(126,188,89,0.3);
+				box-shadow: 0.1em 0.1em 1em rgba(0,0,0,.2);
+				text-shadow: 3px 3px 0.1em rgba(0,0,0,.6);
+			}
+			::-webkit-file-upload-button{
+				width: 30%;
+				height: 1.5em;
+				padding: 0.2em;
+				font-size: 36px;
+				/* font-weight: bold; */
+				color: rgba(0,0,0,.6);
+				font-family: 'ZCOOL QingKe HuangYou', cursive;
+				background-color: rgba(234,234,234,0.9);
+				border: 0;
+				border-radius: 1em;
+				outline: 0px;
+				box-shadow: 0.1em 0.1em 1em rgba(0,0,0,.2);
+				cursor: pointer;
+			}
+			::-webkit-file-upload-button:hover{
+				cursor: pointer;
+				transform: scale(1.02); 
+				transition: all .1s;
+			}
+			.oup-lab{
+				width: 41%;
+				height: 1.5em;
+				margin-top: 1.5em;
+				margin-left: 8.5%;
+				padding: 1em;
+				position:fixed;
+				border: 0;
+				border-radius: 1em;
+				font-size: 2em;
+				color: rgba(255,255,255,1);
+				font-family: 'ZCOOL QingKe HuangYou', cursive;
+				text-align: center;
+				outline: 0px;
+				/* background-color: rgb(230, 180, 80); */
+				box-shadow: 0.1em 0.1em 1em rgba(0,0,0,.2);
+				text-shadow: 3px 3px 0.1em rgba(0,0,0,.6);
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<div class="banner">
+			<span>新 闻 分 类</span>
+		</div>
+
+		<div class="main">
+			<div class="left-panel">
+				<div id="title-btn" class="select-btn select-btn-active" onclick="titlePanel()">
+					<span>仅标题分类</span>
+				</div>
+				<div id="content-btn" class="select-btn" onclick="contentPanel()">
+					<span>仅正文分类</span>
+				</div>
+				<div id="combine-btn" class="select-btn" onclick="combinePanel()">
+					<span>组合分类</span>
+				</div>
+				<div id="batch-btn" class="select-btn" onclick="batchPanel()">
+					<span>批量文件分类</span>
+				</div>
+			</div>
+
+			<div class="right-panel">
+				
+				<div id="title-panel" class="panel" style="display: block">
+					<textarea id="input_title" name="input_title" class="title-textarea" style="margin-top: 2.5em; height: 1.2em;" wrap="off" rows="1" placeholder="请输入新闻标题"></textarea>
+					<div class="result">
+						<div id="title-res-class" class="res-class">
+							<span>- -</span>
+						</div>
+						<div id="title-res-list" class="res-list">
+							<p id="label1">--：0.00%</p>
+							<p id="label2">--：0.00%</p>
+							<p id="label3">--：0.00%</p>
+							<p id="label4">--：0.00%</p>
+							<p id="label5">--：0.00%</p>
+						</div>
+					</div>
+					<button id="title_classify" name="title_classify" class="btn-classify" style="top: 20em;" onclick="getOne('title')">获取分类结果</button>
+				</div>
+
+				<div id="content-panel" class="panel" style="display: none">
+					<textarea id="input_content" name="input_title" class="content-textarea" wrap="virtual" rows="1" placeholder="请输入新闻正文"></textarea>
+					<div class="result" style="top: 14em">
+						<div id="content-res-class" class="res-class">
+							<span>- -</span>
+						</div>
+						<div id="content-res-list" class="res-list">
+							<p id="label1">--：0.00%</p>
+							<p id="label2">--：0.00%</p>
+							<p id="label3">--：0.00%</p>
+							<p id="label4">--：0.00%</p>
+							<p id="label5">--：0.00%</p>
+						</div>
+					</div>
+					<button id="content_classify" name="title_classify" class="btn-classify" style="top: 20.5em;" onclick="getOne('content')">获取分类结果</button>
+				</div>
+
+				<div id="combine-panel" class="panel" style="display: none">
+					<textarea id="input_title" name="input_title" class="title-textarea" wrap="off" rows="1" placeholder="请输入新闻标题"></textarea>
+					<textarea id="input_content" name="input_title" class="content-textarea" style="margin-top: 0.5em;" wrap="virtual" rows="1" class="content-textarea" placeholder="请输入新闻正文"></textarea>
+					<div class="result" style="top: 16em; height: 4em;">
+						<div id="combine-res-class" class="res-class">
+							<span>- -</span>
+						</div>
+						<div id="combine-res-list1" class="res-list" style="margin: -5.5em 0 0 45%;">
+							<p id="label1">--：0.00%</p>
+							<p id="label2">--：0.00%</p>
+							<p id="label3">--：0.00%</p>
+							<p id="label4">--：0.00%</p>
+							<p id="label5">--：0.00%</p>
+						</div>
+						<div id="combine-res-list2" class="res-list" style="margin: -4.1em 0 0 70%;">
+							<p id="label1">--：0.00%</p>
+							<p id="label2">--：0.00%</p>
+							<p id="label3">--：0.00%</p>
+							<p id="label4">--：0.00%</p>
+							<p id="label5">--：0.00%</p>
+						</div>
+					</div>
+					<button class="btn-classify" id="combine_classify" name="title_classify" onclick="getOne('combine')">获取分类结果</button>
+				</div>
+
+				<div id="batch-panel" class="panel" style="display: none">
+					<div class="inp-lab">
+						<label>上传csv/xlsx新闻文件：</label>
+					</div>
+					<!-- <form id="upload_file" data-ajax="false" action="getFile" method="post" enctype="multipart/form-data"> -->
+					<form id="upload_file" enctype="multipart/form-data" method="POST" action="xxx" data-ajax="false">
+						<input type="file" name="filename" class="inp-file">
+						<input type="button" id="submit" name="submit" class="btn-classify" style="top: 20em;" value="导出批量分类文件" onclick="getFile()"></input>
+					</form>
+					<div id="output" class="oup-lab">
+						<label>等待获取文件...</label>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</body>
+
+	<script>
+		// 移出左侧所以按钮的激活效果，隐藏所有分类界面
+		function deactive(){
+			$('#title-btn').removeClass("select-btn-active");
+			$('#content-btn').removeClass("select-btn-active");
+			$('#combine-btn').removeClass("select-btn-active");
+			$('#batch-btn').removeClass("select-btn-active");
+			$('#title-panel').css({display: "none"});
+			$('#content-panel').css({display: "none"});
+			$('#combine-panel').css({display: "none"});
+			$('#batch-panel').css({display: "none"});
+		}
+		// 激活标题分类按钮样式，显示标题分类界面
+		function titlePanel(){
+			if($('#title-panel').css("display") == "none"){
+				deactive();
+				$('#title-btn').addClass("select-btn-active");
+				$('#title-panel').css({display: "block"});
+			}
+		}
+		// 激活内容分类按钮样式，显示内容分类界面
+		function contentPanel(){
+			if($('#content-panel').css("display") == "none"){
+				deactive();
+				$('#content-btn').addClass("select-btn-active");
+				$('#content-panel').css({display: "block"});
+			}
+		}
+		// 激活组合分类按钮样式，显示组合分类界面
+		function combinePanel(){
+			if($('#combine-panel').css("display") == "none"){
+				deactive();
+				$('#combine-btn').addClass("select-btn-active");
+				$('#combine-panel').css({display: "block"});
+			}
+		}
+		// 激活批量文件分类按钮样式，显示批量文件分类界面
+		function batchPanel(){
+			if($('#batch-panel').css("display") == "none"){
+				deactive();
+				$('#batch-btn').addClass("select-btn-active");
+				$('#batch-panel').css({display: "block"});
+			}
+		}
+		// 获取单条新闻的分类结果，请求服务器，函数内部判断执行 标题/内容/组合 分类
+		function getOne(name){
+			var id = '#' + name + '-panel';
+			// console.log(id);
+			var data={
+				'input_title': $(id).children("#input_title").val(),
+				'input_content': $(id).children("#input_content").val(),
+			};
+			console.log("标题：" + data['input_title'])
+			console.log("内容：" + data['input_content']);
+			
+			$.ajax({
+				type: "post",
+				url: '/getOne',
+				dataType: 'json',
+				data: JSON.stringify(data),
+				contentType: 'application/json;charset=UTF-8', // 编码格式
+
+				success: function (response) {
+					$(id).children("div").children(".res-class").children("span").text(response.label);
+					if(response.label == '- -')
+						alert("请输入新闻文本以获取预测分类结果！");
+					if(name == "title"){
+						for(var i = 0; i < 5; i++)
+								$(id).children("div").children(".res-list").children("#label" + (i + 1).toString()).text(response.title_res[i][0] + "：" + response.title_res[i][1] + "%");
+					}
+					else if(name == "content"){
+						for(var i = 0; i < 5; i++)
+								$(id).children("div").children(".res-list").children("#label" + (i + 1).toString()).text(response.content_res[i][0] + "：" + response.content_res[i][1] + "%");
+					}
+					else if(name == "combine"){
+						for(var i = 0; i < 5; i++){
+								$(id).children("div").children("#combine-res-list1").children("#label" + (i + 1).toString()).text(response.title_res[i][0] + "：" + response.title_res[i][1] + "%");
+								$(id).children("div").children("#combine-res-list2").children("#label" + (i + 1).toString()).text(response.content_res[i][0] + "：" + response.content_res[i][1] + "%");
+						}
+					}
+					console.log(response);
+				},
+				error: function(xhr, type) {
+					console.log(xhr);
+				}
+			});
+		}
+		// 上传需批量分类的新闻文件到服务器，由服务器批量处理后生成含预测结果的文件
+		function getFile(){
+			var form = new FormData(document.getElementById("upload_file")); //构造一个含有表单所以数据的FormData对象  
+			$("#batch-panel").children("#output").children("label").text("分类预测文件生成中，请稍等...");
+
+			$.ajax({
+				type: "post",
+				url: '/getFile',
+				dataType: 'json',
+				data: form,  //$("#upload_file").serialize(),无效
+				processData: false,  // jQuerry不处理发送的数据
+				contentType: false,  // jQuerry不设置Content-Type请求头，因为表单已经设置了multipart/form-data
+
+				success: function (response) {
+					console.log(response);
+					if(response.output == "finished")
+						$("#batch-panel").children("#output").html('<a href="../static/' + response.filename + '">' + response.filename + '</a>');
+					else
+						$("#batch-panel").children("#output").children("label").text(response.output);
+				},
+				error: function(xhr, type) {
+					console.log(xhr);
+				}
+			});
+		}
+
+	</script>
+</html>
